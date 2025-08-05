@@ -1,0 +1,4 @@
+behave==1.2.6
+sqlite3
+pytest==7.4.0
+faker==19.6.2
