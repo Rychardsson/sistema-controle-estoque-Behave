@@ -1,0 +1,113 @@
+Feature: Controle de Estoque # features/estoque.feature:1
+  Como um usuário do sistema de estoque
+  Eu quero controlar movimentações de entrada e saída
+  Para manter o inventário atualizado e evitar rupturas
+  Feature: Controle de Estoque  # features/estoque.feature:1
+
+  Scenario: Registrar entrada de estoque                                        # features/estoque.feature:9
+    Given que o sistema está limpo                                              # features/steps/estoque_steps.py:14
+    Given que existe um produto "Smartphone Samsung"                            # features/steps/produto_steps.py:25
+    When eu registro uma entrada de 20 unidades do produto "Smartphone Samsung" # features/steps/estoque_steps.py:40
+    Then o estoque do produto "Smartphone Samsung" deve ser 20 unidades         # features/steps/estoque_steps.py:125
+    And deve ser criada uma movimentação de entrada                             # features/steps/estoque_steps.py:150
+
+  Scenario: Registrar saída de estoque com quantidade suficiente       # features/estoque.feature:15
+    Given que o sistema está limpo                                     # features/steps/estoque_steps.py:14
+    Given o produto "Tablet Apple" tem 15 unidades no estoque          # features/steps/estoque_steps.py:20
+    When eu registro uma saída de 5 unidades do produto "Tablet Apple" # features/steps/estoque_steps.py:64
+    Then o estoque do produto "Tablet Apple" deve ser 10 unidades      # features/steps/estoque_steps.py:125
+    And deve ser criada uma movimentação de saída                      # features/steps/estoque_steps.py:159
+
+  Scenario: Impedir saída de produto com estoque insuficiente  # features/estoque.feature:21
+    Given que o sistema está limpo                             # features/steps/estoque_steps.py:14
+    Given o produto "Cabo HDMI" tem 5 unidades no estoque      # features/steps/estoque_steps.py:20
+    When tento registrar uma saída de 6 unidades               # features/steps/estoque_steps.py:100
+    Then o sistema deve exibir "Estoque insuficiente"          # features/steps/estoque_steps.py:133
+    And não deve alterar o estoque                             # features/steps/estoque_steps.py:142
+    And o estoque deve permanecer 5                            # features/steps/estoque_steps.py:182
+
+  Scenario: Impedir saída quando produto não tem estoque      # features/estoque.feature:28
+    Given que o sistema está limpo                            # features/steps/estoque_steps.py:14
+    Given o produto "Headset Gamer" tem 0 unidades no estoque # features/steps/estoque_steps.py:20
+    When tento registrar uma saída de 1 unidades              # features/steps/estoque_steps.py:100
+    Then deve retornar erro de estoque insuficiente           # features/steps/estoque_steps.py:168
+    And o estoque deve permanecer 0                           # features/steps/estoque_steps.py:182
+
+  Scenario: Registrar múltiplas entradas e saídas                           # features/estoque.feature:34
+    Given que o sistema está limpo                                          # features/steps/estoque_steps.py:14
+    Given o produto "Pen Drive 32GB" tem 0 unidades no estoque              # features/steps/estoque_steps.py:20
+    When eu registro uma entrada de 50 unidades do produto "Pen Drive 32GB" # features/steps/estoque_steps.py:40
+    And eu registro uma saída de 15 unidades do produto "Pen Drive 32GB"    # features/steps/estoque_steps.py:64
+    And eu registro uma entrada de 10 unidades do produto "Pen Drive 32GB"  # features/steps/estoque_steps.py:40
+    And eu registro uma saída de 20 unidades do produto "Pen Drive 32GB"    # features/steps/estoque_steps.py:64
+    Then o estoque do produto "Pen Drive 32GB" deve ser 25 unidades         # features/steps/estoque_steps.py:125
+
+  Scenario: Tentar registrar entrada com quantidade zero                       # features/estoque.feature:42
+    Given que o sistema está limpo                                             # features/steps/estoque_steps.py:14
+    Given que existe um produto "Mouse Wireless"                               # features/steps/produto_steps.py:25
+    When tento registrar uma entrada de 0 unidades do produto "Mouse Wireless" # features/steps/estoque_steps.py:88
+    Then deve retornar erro de movimentação inválida                           # features/steps/estoque_steps.py:175
+
+  Scenario: Tentar registrar saída com quantidade zero                         # features/estoque.feature:47
+    Given que o sistema está limpo                                             # features/steps/estoque_steps.py:14
+    Given o produto "Carregador USB-C" tem 10 unidades no estoque              # features/steps/estoque_steps.py:20
+    When tento registrar uma saída de 0 unidades do produto "Carregador USB-C" # features/steps/estoque_steps.py:94
+    Then deve retornar erro de movimentação inválida                           # features/steps/estoque_steps.py:175
+
+  Scenario: Estoque exato - retirar toda quantidade disponível           # features/estoque.feature:52
+    Given que o sistema está limpo                                       # features/steps/estoque_steps.py:14
+    Given o produto "Adaptador HDMI" tem 3 unidades no estoque           # features/steps/estoque_steps.py:20
+    When eu registro uma saída de 3 unidades do produto "Adaptador HDMI" # features/steps/estoque_steps.py:64
+    Then o estoque do produto "Adaptador HDMI" deve ser 0 unidades       # features/steps/estoque_steps.py:125
+    And deve ser criada uma movimentação de saída                        # features/steps/estoque_steps.py:159
+
+  Scenario: Verificar estoque após várias operações                    # features/estoque.feature:58
+    Given que o sistema está limpo                                     # features/steps/estoque_steps.py:14
+    Given o produto "SSD 500GB" tem 8 unidades no estoque              # features/steps/estoque_steps.py:20
+    When eu registro uma entrada de 12 unidades do produto "SSD 500GB" # features/steps/estoque_steps.py:40
+    And eu registro uma saída de 7 unidades do produto "SSD 500GB"     # features/steps/estoque_steps.py:64
+    And eu registro uma entrada de 5 unidades do produto "SSD 500GB"   # features/steps/estoque_steps.py:40
+    And eu registro uma saída de 3 unidades do produto "SSD 500GB"     # features/steps/estoque_steps.py:64
+    Then o estoque do produto "SSD 500GB" deve ser 15 unidades         # features/steps/estoque_steps.py:125
+
+Feature: Gerenciamento de Produtos # features/produto.feature:1
+  Como um usuário do sistema de estoque
+  Eu quero gerenciar produtos
+  Para controlar o inventário da empresa
+  Feature: Gerenciamento de Produtos  # features/produto.feature:1
+
+  Scenario: Cadastrar um novo produto                             # features/produto.feature:9
+    Given que o sistema está limpo                                # features/steps/estoque_steps.py:14
+    When eu cadastro um produto "Notebook Dell" com preço 2500.00 # features/steps/produto_steps.py:45
+    Then o produto "Notebook Dell" deve estar cadastrado          # features/steps/produto_steps.py:102
+    And o produto "Notebook Dell" deve ter preço 2500.00          # features/steps/produto_steps.py:109
+    And o produto "Notebook Dell" deve ter estoque de 0 unidades  # features/steps/produto_steps.py:116
+
+  Scenario: Cadastrar produto com nome duplicado              # features/produto.feature:15
+    Given que o sistema está limpo                            # features/steps/estoque_steps.py:14
+    Given que existe um produto "Mouse Logitech"              # features/steps/produto_steps.py:25
+    When eu cadastro um produto "Mouse Logitech"              # features/steps/produto_steps.py:64
+    Then deve retornar erro "Já existe um produto com o nome" # features/steps/produto_steps.py:123
+
+  Scenario: Buscar produto existente                                # features/produto.feature:20
+    Given que o sistema está limpo                                  # features/steps/estoque_steps.py:14
+    Given que existe um produto "Teclado Mecânico" com preço 350.00 # features/steps/produto_steps.py:10
+    When eu busco o produto "Teclado Mecânico"                      # features/steps/produto_steps.py:70
+    Then o produto deve ser encontrado                              # features/steps/produto_steps.py:130
+
+  Scenario: Buscar produto inexistente                # features/produto.feature:25
+    Given que o sistema está limpo                    # features/steps/estoque_steps.py:14
+    When eu busco o produto "Produto Inexistente"     # features/steps/produto_steps.py:70
+    Then deve retornar erro de produto não encontrado # features/steps/produto_steps.py:137
+
+  Scenario: Atualizar preço do produto                           # features/produto.feature:29
+    Given que o sistema está limpo                               # features/steps/estoque_steps.py:14
+    Given que existe um produto "Monitor 24" com preço 800.00    # features/steps/produto_steps.py:10
+    When eu atualizo o preço do produto "Monitor 24" para 750.00 # features/steps/produto_steps.py:85
+    Then o produto "Monitor 24" deve ter preço 750.00            # features/steps/produto_steps.py:109
+
+  Scenario: Cadastrar produto com estoque inicial                      # features/produto.feature:34
+    Given que o sistema está limpo                                     # features/steps/estoque_steps.py:14
+    Given que existe um produto "Cabo HDMI" com estoque de 10 unidades # features/steps/produto_steps.py:31
+    Then o produto "Cabo HDMI" deve ter estoque de 10 unidades         # features/steps/produto_steps.py:116
+
