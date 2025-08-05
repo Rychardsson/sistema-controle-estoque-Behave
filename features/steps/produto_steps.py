@@ -7,12 +7,6 @@ from src.services.produto_service import ProdutoService
 from src.exceptions.estoque_exceptions import ProdutoNaoEncontradoException
 
 
-@given('que o sistema está limpo')
-def step_sistema_limpo(context):
-    """Step básico para indicar sistema limpo"""
-    pass
-
-
 @given('que existe um produto "{nome}" com preço {preco:f}')
 def step_existe_produto_com_preco(context, nome, preco):
     """Cria um produto com nome e preço especificados"""

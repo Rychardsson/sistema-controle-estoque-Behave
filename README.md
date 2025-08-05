@@ -85,6 +85,7 @@ pytest tests/
 O sistema utiliza SQLite com as seguintes tabelas:
 
 ### Tabela: produtos
+
 - id (INTEGER PRIMARY KEY)
 - nome (TEXT NOT NULL)
 - descricao (TEXT)
@@ -94,6 +95,7 @@ O sistema utiliza SQLite com as seguintes tabelas:
 - updated_at (TIMESTAMP)
 
 ### Tabela: movimentacoes
+
 - id (INTEGER PRIMARY KEY)
 - produto_id (INTEGER FOREIGN KEY)
 - tipo (TEXT) -- 'entrada' ou 'saida'
