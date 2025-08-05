@@ -11,6 +11,12 @@ from src.exceptions.estoque_exceptions import (
 )
 
 
+@given('que o sistema está limpo')
+def step_sistema_limpo(context):
+    """Step básico para indicar sistema limpo"""
+    pass
+
+
 @given('o produto "{nome}" tem {quantidade:d} unidades no estoque')
 def step_produto_tem_estoque(context, nome, quantidade):
     """Define o estoque inicial de um produto"""
